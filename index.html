@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="3000">
+  <title>LIVE LEADERBOARD</title>
+  <style>
+    
+    .slogan {
+      background: #E30A17;
+      color: white;
+      padding: 15px 50px; 
+      min-width: 350px; 
+      text-align: center;
+      border-radius: 40px; 
+      font-weight: 700; 
+      font-size: 1.8em; 
+      display: inline-block;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      border: 3px solid rgba(255,255,255,0.5);
+      margin: 0 20px;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 1px; 
+    }
+    
+    .slogan::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0) 45%,
+        rgba(255,255,255,0.5) 50%,
+        rgba(255,255,255,0) 55%,
+        rgba(255,255,255,0) 100%
+      );
+      transform: rotate(30deg);
+      animation: shine 3s infinite;
+    }
+    
+    @keyframes shine {
+      0% { left: -100%; }
+      20% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://ik.imagekit.io/agrwi9hyb/back.png?updatedAt=1757710749891');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      overflow: hidden;
+    }
+
+    .overlay {
+      background-color: rgba(255, 255, 255, 0.65);
+      height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0 20px;
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between; 
+      width: 100%; 
+      flex: 1;
+      
+    }
+
+    .logo {
+      height: 120px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .logo-left {
+      margin-right: 20px;
+    }
+
+    .logo-right {
+      margin-left: 20px;
+    }
+
+    .title-group {
+      display: flex;
+      flex-direction: column;
+      margin-right: auto;
+      margin-left: 200px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin: 0 0 5px;
+      color: #2c3e50;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+    }
+
+    .canal-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-bottom: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      width: fit-content;
+    }
+
+    .dashboard {
+      display: flex;
+      flex: 1;
+      gap: 20px;
+    }
+
+    .top-vendors {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .top-three-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .champion-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 250, 250, 0.95));
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      position: relative;
+      transition: all 0.3s ease;
+      padding-bottom: 20px;
+      min-height: 500px;
+      
+      border-bottom: 3px solid #e0e0e0;
+      
+      height: 550px;
+    }
+    
+    .champion-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .first-place {
+      background: linear-gradient(135deg, rgba(255, 250, 230, 0.95), rgba(255, 245, 200, 0.95));
+      border: 2px solid gold;
+    }
+    
+    .second-place {
+      background: linear-gradient(135deg, rgba(245, 245, 245, 0.95), rgba(235, 235, 235, 0.95));
+      border: 2px solid silver;
+    }
+    
+    .third-place {
+      background: linear-gradient(135deg, rgba(255, 240, 230, 0.95), rgba(245, 225, 215, 0.95));
+      border: 2px solid #cd7f32;
+    }
+
+    .champion-image-container {
+      width: 100%;
+      height: 250px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    
+    .first-place .champion-image-container,
+    .second-place .champion-image-container,
+    .third-place .champion-image-container {
+      height: 250px;
+    }
+
+    .champion-image {
+      height: 90%;
+      max-width: 100%;
+      object-fit: contain;
+      object-position: bottom;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+    }
+    
+    
+    .first-place .champion-image,
+    .second-place .champion-image,
+    .third-place .champion-image {
+      height: 90%;
+    }
+
+    .champion-details {
+      flex: 1;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .champion-rank {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 1.5em;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      z-index: 5;
+    }
+    
+    
+    .first-place .champion-rank,
+    .second-place .champion-rank,
+    .third-place .champion-rank {
+      width: 40px;
+      height: 40px;
+      font-size: 1.5em;
+    }
+    
+    .first-place .champion-rank {
+      background: linear-gradient(135deg, #ffd700, #ffaa00);
+      color: #333;
+    }
+    
+    .second-place .champion-rank {
+      background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
+      color: #333;
+    }
+    
+    .third-place .champion-rank {
+      background: linear-gradient(135deg, #cd7f32, #a56423);
+      color: #fff;
+    }
+
+    .champion-name {
+      font-size: 1.6em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #2c3e50;
+      text-align: center;
+    }
+    
+    
+    .first-place .champion-name,
+    .second-place .champion-name,
+    .third-place .champion-name {
+      font-size: 1.6em;
+    }
+
+    .champion-score {
+      font-size: 1.5em;
+      background: rgba(52, 152, 219, 0.2);
+      padding: 8px 20px;
+      border-radius: 30px;
+      margin: 5px 0 20px;
+      color: #2980b9;
+      font-weight: bold;
+      display: inline-block;
+    }
+    
+    
+    .first-place .champion-score,
+    .second-place .champion-score,
+    .third-place .champion-score {
+      font-size: 1.5em;
+    }
+    
+    .first-place .champion-score {
+      background: rgba(241, 196, 15, 0.3);
+      color: #d35400;
+    }
+
+    .champion-metrics {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      padding: 0 15px;
+    }
+
+    .champion-metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: rgba(0,0,0,0.03);
+      border-radius: 10px;
+    }
+
+    .champion-metric-value {
+      font-weight: bold;
+      color: #2c3e50;
+      font-size: 1.2em;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .champion-metric-label {
+      font-size: 0.9em;
+      color: #7f8c8d;
+      text-align: left;
+      flex: 1;
+    }
+
+    .other-vendors {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+      padding: 15px;
+      overflow-y: auto;
+      max-height: calc(100vh - 120px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .other-vendors h2 {
+      text-align: center;
+      margin-top: 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding-bottom: 10px;
+      color: #2c3e50;
+    }
+
+    .other-vendor-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: background-color 0.2s ease;
+      animation: fadeIn 0.5s ease-out backwards;
+    }
+
+    .other-vendor-item:hover {
+      background-color: rgba(0, 0, 0, 0.03);
+    }
+
+    .other-rank {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-size: 0.9em;
+      color: #2c3e50;
+      font-weight: bold;
+    }
+
+    .other-name {
+      flex: 1;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+
+    .other-metrics {
+      display: flex;
+      gap: 15px;
+    }
+
+    .other-metric {
+      text-align: center;
+      min-width: 60px;
+    }
+
+    .other-metric-value {
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .other-metric-label {
+      font-size: 0.7em;
+      opacity: 0.8;
+      color: #7f8c8d;
+    }
+
+    .other-score {
+      background: rgba(52, 152, 219, 0.1);
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      color: #2980b9;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .date-display {
+      position: absolute;
+      bottom: 10px;
+      right: 20px;
+      font-size: 0.9em;
+      opacity: 0.7;
+      color: #7f8c8d;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes shimmer {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .first-place {
+      animation: pulse 3s infinite, shimmer 2s infinite;
+    }
+
+    .champion-card {
+      animation: fadeIn 0.5s ease-out backwards;
+    }
+
+    .first-place {
+      animation-delay: 0.1s;
+    }
+
+    .second-place {
+      animation-delay: 0.3s;
+    }
+
+    .third-place {
+      animation-delay: 0.5s;
+    }
+
+    .ribbon {
+      position: absolute;
+      right: -5px; 
+      top: -5px;
+      z-index: 1;
+      overflow: hidden;
+      width: 100px; 
+      height: 100px;
+      text-align: right;
+    }
+    
+    .first-place .ribbon span {
+      font-size: 12px;
+      font-weight: bold;
+      color: #FFF;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 25px;
+      transform: rotate(45deg);
+      width: 120px;
+      display: block;
+      background: linear-gradient(#F70505 0%, #8F0808 100%);
+      box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+      position: absolute;
+      top: 22px; 
+      right: -27px;
+    }
+    
+    .first-place .ribbon span::before {
+      content: "";
+      position: absolute; 
+      left: 0px; top: 100%;
+      z-index: -1;
+      border-left: 3px solid #8F0808;
+      border-right: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+      border-top: 3px solid #8F0808;
+    }
+    
+    .first-place .ribbon span::after {
+      content: "";
+      position: absolute; 
+      right: 0px; top: 100%;
+      z-index: -1;
+      border-left: 3px solid transparent;
+      border-right: 3px solid #8F0808;
+      border-bottom: 3px solid transparent;
+      border-top: 3px solid #8F0808;
+    }
+
+    @media (max-width: 1200px) {
+
+        .slogan {
+        font-size: 1.4em;
+        min-width: 300px;
+        padding: 12px 30px;
+        white-space: normal;
+      }
+      .dashboard {
+        flex-direction: column;
+      }
+      
+      .top-three-container {
+        flex-direction: column;
+        height: auto;
+      }
+      
+      .champion-card {
+        min-height: auto;
+        flex-direction: row;
+        align-items: center;
+        padding-bottom: 0;
+        height: auto;
+      }
+      
+      .champion-image-container {
+        width: 200px;
+        height: 200px;
+      }
+      
+      .champion-details {
+        align-items: flex-start;
+        text-align: left;
+      }
+      
+      .champion-metrics {
+        padding: 0;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .champion-card {
+        flex-direction: column;
+      }
+      
+      .champion-image-container {
+        width: 100%;
+      }
+      
+      .header-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .logo-left, .logo-right {
+        margin: 10px 0;
+      }
+      
+      .header-content {
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+      
+      .title-group {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+      
+      .slogan {
+        margin: 15px 0;
+        white-space: normal;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="header-container">
+      
+      <img src="https://ik.imagekit.io/agrwi9hyb/logo1.gif?updatedAt=1757711536886" alt="Company Logo" class="logo logo-left">
+      
+      <div class="header-content">
+        <div class="title-group">
+          <h1>LIVE LEADERBOARD</h1>
+          <div class="canal-badge">2025/2026</div>
+        </div>
+        
+        
+        <div class="slogan">Passport to Victory : Who’s Flying to Turkey?</div>
+      </div>
+      
+      
+      <img src="https://media-hosting.imagekit.io/3078409131f143b2/best%20try%20gpt.gif?Expires=1841691464&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=Z7HFH0a1nn-JjoxDYseDa-UK~LBnAXHB8b2Hl50SvW42EFFhW2gl5WfNdCcPClwTjRi6btQF68fM2hUcXkr~9DL0h2Tbgjwu35h0rX3a8lstWIbJpKsp2rNUeZKHQ~3Og6L4VJla2TYscZMy2DKFAvG5ogdYaeGyFaQ1APTehAtgzTddHpAhiiHzfiA3jJ4hbHFz~S54~Tmp5s~LY8AZCLLbJj0WQF7-avQc3qE6RGP6xxG5lGnQt7zkCu77Y4JTRaIbDWMXakq5vN1Z29qFoPUvSGJmZQJlfSFv1q5AvFA6UUATkkwoYHf7F36DJhh8OEkEP16A1Jnz49grXlV7hw__" alt="Sales GIF" class="logo logo-right">
+    </div>
+    
+    <div class="dashboard">
+      <div class="top-vendors">
+        <div id="topThree" class="top-three-container"></div>
+      </div>
+      <div class="other-vendors">
+        <h2>Other Competitors</h2>
+        <div id="otherVendors"></div>
+      </div>
+    </div>
+    <div class="date-display" id="dateDisplay"></div>
+  </div>
+
+  <script>
+    const dataSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTWNdJjJV5UO9HxVonynrxPkppDUxifyhnK7r4OUeLxTUF86UMxolquFuk6xgaYd3KfSo9pFE7tpeUh/pub?output=csv';
+    const imagesSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTWNdJjJV5UO9HxVonynrxPkppDUxifyhnK7r4OUeLxTUF86UMxolquFuk6xgaYd3KfSo9pFE7tpeUh/pub?gid=1036336992&single=true&output=csv';
+
+    
+    const defaultImage = '/api/placeholder/200/300';
+
+    
+    let vendorImages = {};
+
+    
+    function fixGoogleDriveURL(url) {
+      if (!url) return defaultImage;
+      
+      
+      if (url.includes('drive.google.com')) {
+        
+        const match = url.match(/id=([^&]+)/);
+        if (match && match[1]) {
+          const fileId = match[1];
+          
+          return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
+        }
+      }
+      return url;
+    }
+
+    function formatNumber(num) {
+      return new Intl.NumberFormat('fr-FR').format(num);
+    }
+    
+    function renderTopThree(topVendors) {
+      const container = document.getElementById('topThree');
+      container.innerHTML = '';
+      
+      const rankNames = ['first-place', 'second-place', 'third-place'];
+      const rankLabels = ['CHAMPION', '', ''];
+      
+      for (let i = 0; i < Math.min(3, topVendors.length); i++) {
+        const vendor = topVendors[i];
+        const imgUrl = fixGoogleDriveURL(vendorImages[vendor.name]) || defaultImage;
+        const rankClass = rankNames[i];
+        
+        const card = document.createElement('div');
+        card.className = `champion-card ${rankClass}`;
+        card.style.animationDelay = `${0.2 * i}s`;
+        
+        let ribbonHtml = '';
+        if (i === 0) {
+          ribbonHtml = `
+            <div class="ribbon">
+              <span>${rankLabels[i]}</span>
+            </div>
+          `;
+        }
+        
+        card.innerHTML = `
+          ${ribbonHtml}
+          <div class="champion-rank">${i+1}</div>
+          <div class="champion-image-container">
+            <img src="${imgUrl}" alt="${vendor.name}" class="champion-image" onerror="this.onerror=null; this.src='${defaultImage}';">
+          </div>
+          <div class="champion-details">
+            <div class="champion-name">${vendor.name}</div>
+            <div class="champion-score">${vendor.score.toFixed(1)} pts</div>
+            <div class="champion-metrics">
+              <div class="champion-metric">
+                <div class="champion-metric-label">Recouvrement</div>
+                <div class="champion-metric-value">${vendor.rec}%</div>
+              </div>
+              <div class="champion-metric">
+                <div class="champion-metric-label">CA</div>
+                <div class="champion-metric-value">${vendor.ca}%</div>
+              </div>
+              <div class="champion-metric">
+                <div class="champion-metric-label">Clients (${vendor.clientsVal}/${vendor.clientsTarget})</div>
+                <div class="champion-metric-value">${vendor.clients}%</div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(card);
+      }
+    }
+    
+    function renderOtherVendors(vendors) {
+      const container = document.getElementById('otherVendors');
+      container.innerHTML = '';
+      
+      
+      for (let i = 3; i < vendors.length; i++) {
+        const v = vendors[i];
+        const item = document.createElement('div');
+        item.className = 'other-vendor-item';
+        item.style.animationDelay = `${0.1 * (i - 3)}s`;
+        
+        item.innerHTML = `
+          <div class="other-rank">${i + 1}</div>
+          <div class="other-name">${v.name}</div>
+          <div class="other-score">${v.score.toFixed(1)} pts</div>
+          <div class="other-metrics">
+            <div class="other-metric">
+              <div class="other-metric-value">${v.rec}%</div>
+              <div class="other-metric-label">Recouvrement</div>
+            </div>
+            <div class="other-metric">
+              <div class="other-metric-value">${v.ca}%</div>
+              <div class="other-metric-label">CA</div>
+            </div>
+            <div class="other-metric">
+              <div class="other-metric-value">${v.clients}%</div>
+              <div class="other-metric-label">Clients</div>
+            </div>
+          </div>
+        `;
+        
+        container.appendChild(item);
+      }
+    }
+    
+    function updateDateTime() {
+      const now = new Date();
+      const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      document.getElementById('dateDisplay').textContent = now.toLocaleDateString('fr-FR', options);
+    }
+    
+    
+    async function loadVendorImages() {
+      try {
+        const res = await fetch(imagesSheetURL);
+        const data = await res.text();
+        const rows = data.split("\n").slice(1); 
+        
+        rows.forEach(row => {
+          if (row.trim().length > 0) {
+            
+            if (row.includes('"')) {
+              
+              let inQuote = false;
+              let currentField = '';
+              let fields = [];
+              
+              for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                
+                if (char === '"') {
+                  inQuote = !inQuote;
+                } else if (char === ',' && !inQuote) {
+                  fields.push(currentField);
+                  currentField = '';
+                } else {
+                  currentField += char;
+                }
+              }
+              
+              fields.push(currentField); 
+              
+              if (fields.length >= 2) {
+                const name = fields[0].trim().replace(/^"|"$/g, '');
+                const imageUrl = fields[1].trim().replace(/^"|"$/g, '');
+                vendorImages[name] = imageUrl;
+              }
+            } else {
+              
+              const parts = row.split(",");
+              if (parts.length >= 2) {
+                const name = parts[0].trim();
+                const imageUrl = parts[1].trim();
+                vendorImages[name] = imageUrl;
+              }
+            }
+          }
+        });
+        
+        console.log("Vendor images loaded:", vendorImages);
+      } catch (err) {
+        console.error("Error loading vendor images:", err);
+      }
+    }
+  
+    async function loadVendors() {
+      try {
+        const res = await fetch(dataSheetURL);
+        const data = await res.text();
+        const rows = data.split("\n").slice(1); 
+
+        const vendors = rows
+          .filter(row => row.trim().length > 0)
+          .map(row => {
+            const cols = row.split(",");
+            return { 
+              name: cols[0],
+              recVal: parseFloat(cols[1]),
+              recTarget: parseFloat(cols[2]),
+              caVal: parseFloat(cols[3]),
+              caTarget: parseFloat(cols[4]),
+              clientsVal: parseFloat(cols[5]),
+              clientsTarget: parseFloat(cols[6]),
+              score: parseFloat(cols[7]),
+              
+              rec: ((parseFloat(cols[1]) / parseFloat(cols[2])) * 100).toFixed(1),
+              ca: ((parseFloat(cols[3]) / parseFloat(cols[4])) * 100).toFixed(1),
+              clients: ((parseFloat(cols[5]) / parseFloat(cols[6])) * 100).toFixed(1)
+            };
+          });
+
+        const sorted = vendors.sort((a, b) => b.score - a.score);
+        renderTopThree(sorted);
+        renderOtherVendors(sorted);
+        updateDateTime();
+      } catch (err) {
+        console.error("Error loading data:", err);
+      }
+    }
+    
+    
+    async function init() {
+      await loadVendorImages();
+      await loadVendors();
+      updateDateTime();
+    }
+    
+    init();
+    
+    
+    setInterval(updateDateTime, 60000);
+  
+    
+    setInterval(loadVendors, 60000);
+  </script>
+</body>
+</html>
