@@ -18,7 +18,7 @@ A dynamic, real-time leaderboard designed to track sales team performance during
 
 ## 🚀 Live Demo
 
-Experience the leaderboard in action: [Live Leaderboard Demo](your-demo-link-here)
+Experience the leaderboard in action: [Live Leaderboard Demo](https://bytescorpion.github.io/Live-Leaderboard/)
 
 ## 🛠️ Technology Stack
 
